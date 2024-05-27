@@ -1,5 +1,6 @@
 const handler = require("./index").handler;
 const awssdk = require("aws-sdk");
+const uuid = require("uuid");
 
 jest.mock(
     "/opt/appSyncRequest",
@@ -18,6 +19,8 @@ jest.mock(
             createUser: "createUserMutation",
             createTenant: "createTenantMutation",
             updateUser: "updateUserMutation",
+            deleteUser: "deleteUserMutation",
+            deleteTenant: "deleteTenantMutation",
         };
     },
     { virtual: true }
@@ -28,12 +31,24 @@ jest.mock(
         return {
             listUsers: "listUsersQuery",
             listTenants: "listTenantsQuery",
+            getUser: "getUserQuery",
+            getTenant: "getTenantQuery",
+        };
+    },
+    { virtual: true }
+);
+jest.mock(
+    "/opt/sendWelcomeEmail",
+    () => {
+        return {
+            sendTenantWelcomeEmail: jest.fn(),
         };
     },
     { virtual: true }
 );
 
 const appsyncModule = require("/opt/appSyncRequest");
+const sendEmailModule = require("/opt/sendWelcomeEmail");
 
 const mockCognitoResponse = {
     User: {
@@ -88,35 +103,13 @@ const mockTenantResult = {
     },
 };
 
-const mockEmailParams = {
-    Destination: {
-        ToAddresses: ["test@test.com"],
-    },
-    Message: {
-        Body: {
-            Html: {
-                Charset: "UTF-8",
-                Data: expect.any(String),
-            },
-            Text: {
-                Charset: "UTF-8",
-                Data: expect.any(String),
-            },
-        },
-        Subject: {
-            Charset: "UTF-8",
-            Data: "Welcome to Platelet!",
-        },
-    },
-    Source: "welcome@test.com",
-    ReplyToAddresses: ["welcome@test.com"],
-    ReturnPath: "welcome@test.com",
-};
-
 jest.mock("aws-sdk", () => {
     return {
         CognitoIdentityServiceProvider: class {
             adminCreateUser() {
+                return this;
+            }
+            adminDeleteUser() {
                 return this;
             }
             adminAddUserToGroup() {
@@ -127,14 +120,6 @@ jest.mock("aws-sdk", () => {
             }
             promise() {
                 return Promise.resolve(mockCognitoResponse);
-            }
-        },
-        SES: class {
-            sendEmail() {
-                return this;
-            }
-            promise() {
-                return Promise.resolve();
             }
         },
     };
@@ -171,7 +156,10 @@ describe("plateletAddNewTenant", () => {
             "adminAddUserToGroup"
         );
         const requestSpy = jest.spyOn(appsyncModule, "request");
-        const SESSpy = jest.spyOn(awssdk.SES.prototype, "sendEmail");
+        const sendEmailSpy = jest.spyOn(
+            sendEmailModule,
+            "sendTenantWelcomeEmail"
+        );
         const mockEvent = {
             arguments: {
                 name: "New User",
@@ -264,7 +252,11 @@ describe("plateletAddNewTenant", () => {
             UserPoolId: "testPoolId",
             Username: "testUsername",
         });
-        expect(SESSpy).toHaveBeenCalledWith(mockEmailParams);
+        expect(sendEmailSpy).toHaveBeenCalledWith(
+            mockEvent.arguments.emailAddress,
+            mockEvent.arguments.name,
+            expect.any(String)
+        );
         expect(result).toEqual({
             id: "testTenantId",
             name: mockEvent.arguments.tenantName,
@@ -280,6 +272,78 @@ describe("plateletAddNewTenant", () => {
                 },
                 _version: 1,
             },
+        });
+    });
+    test("clean up on failure", async () => {
+        jest.spyOn(appsyncModule, "request")
+            .mockResolvedValueOnce({ json: () => mockNewUserResult })
+            .mockResolvedValueOnce({ json: () => mockTenantResult })
+            .mockRejectedValueOnce(new Error("test error"))
+            .mockResolvedValueOnce({
+                json: () => ({
+                    data: { getUser: { id: "deleteUserId", _version: 5 } },
+                }),
+            })
+            .mockResolvedValueOnce({ json: () => {} })
+            .mockResolvedValueOnce({
+                json: () => ({
+                    data: { getTenant: { id: "deleteTenantId", _version: 6 } },
+                }),
+            })
+            .mockResolvedValue({ json: () => {} });
+        const cognitoSpy = jest.spyOn(
+            awssdk.CognitoIdentityServiceProvider.prototype,
+            "adminCreateUser"
+        );
+        const cognitoDeleteSpy = jest.spyOn(
+            awssdk.CognitoIdentityServiceProvider.prototype,
+            "adminDeleteUser"
+        );
+        const requestSpy = jest.spyOn(appsyncModule, "request");
+        const mockEvent = {
+            arguments: {
+                name: "New User",
+                emailAddress: "test@test.com",
+                tenantName: "test tenant",
+            },
+        };
+        await expect(handler(mockEvent)).rejects.toThrow("test error");
+        expect(cognitoSpy).toHaveBeenCalledWith({
+            DesiredDeliveryMediums: ["EMAIL"],
+            ForceAliasCreation: false,
+            UserAttributes: [
+                {
+                    Name: "email",
+                    Value: mockEvent.arguments.emailAddress,
+                },
+                {
+                    Name: "email_verified",
+                    Value: "true",
+                },
+            ],
+            UserPoolId: "testPoolId",
+            TemporaryPassword: expect.stringMatching(/^[\w+]{8}$/),
+            MessageAction: "SUPPRESS",
+            Username: expect.any(String),
+        });
+
+        expect(requestSpy).toHaveBeenCalledWith(
+            {
+                query: "deleteUserMutation",
+                variables: { input: { id: "deleteUserId", _version: 5 } },
+            },
+            "testEndpoint"
+        );
+        expect(requestSpy).toHaveBeenCalledWith(
+            {
+                query: "deleteTenantMutation",
+                variables: { input: { id: "deleteTenantId", _version: 6 } },
+            },
+            "testEndpoint"
+        );
+        expect(cognitoDeleteSpy).toHaveBeenCalledWith({
+            UserPoolId: "testPoolId",
+            Username: "testUsername",
         });
     });
 });

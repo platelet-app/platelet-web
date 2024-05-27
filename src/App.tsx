@@ -22,6 +22,13 @@ import Login from "./scenes/Login/Login";
 import SnackNotificationBar from "./components/SnackNotificationBar";
 import TenantListProvider from "./scenes/TenantPicker/TenantListProvider";
 import { initialiseApp } from "./redux/initialise/initialiseActions";
+import * as Sentry from "@sentry/react";
+
+if (process.env.REACT_APP_DEMO_MODE === "false") {
+    Sentry.init({
+        dsn: "something",
+    });
+}
 
 declare module "@mui/material/styles" {
     interface Palette {

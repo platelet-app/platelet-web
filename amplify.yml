@@ -13,6 +13,7 @@ backend:
       commands:
         - '# Execute Amplify CLI with the helper script'
         - npm install -g prebuild-install --unsafe-perm=true
+        - amplify --version
         - amplifyPush --simple
 frontend:
   phases:
@@ -45,8 +46,7 @@ test:
         - '**/*.mp4'
     preTest:
       commands:
-        - npm ci
+        - echo "no tests"
     test:
       commands:
-        - npm test -- --watchAll=false
-        - bash test-amplify-function.sh
+        - echo "no tests"

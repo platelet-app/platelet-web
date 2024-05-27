@@ -1,14 +1,5 @@
 {
   "lambdaLayers": [],
   "permissions": {},
-  "environmentVariableList": [
-    {
-      "cloudFormationParameterName": "plateletSendToEmailAddress",
-      "environmentVariableName": "PLATELET_SEND_TO_EMAIL_ADDRESS"
-    },
-    {
-      "cloudFormationParameterName": "plateletSendFromEmailAddress",
-      "environmentVariableName": "PLATELET_SEND_FROM_EMAIL_ADDRESS"
-    }
-  ]
+  "environmentVariableList": []
 }

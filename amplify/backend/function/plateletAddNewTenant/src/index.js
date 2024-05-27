@@ -12,76 +12,20 @@ Amplify Params - DO NOT EDIT */
 
 const aws = require("aws-sdk");
 const uuid = require("uuid");
+const { sendTenantWelcomeEmail } = require("/opt/sendWelcomeEmail");
 
 const {
     createUser,
     updateUser,
     createTenant,
+    deleteTenant,
+    deleteUser,
 } = require("/opt/graphql/mutations");
+const { getTenant, getUser } = require("/opt/graphql/queries");
 
 const { request, errorCheck } = require("/opt/appSyncRequest");
 
 const GRAPHQL_ENDPOINT = process.env.API_PLATELET_GRAPHQLAPIENDPOINTOUTPUT;
-
-async function sendWelcomeEmail(emailAddress, recipientName, password) {
-    const ses = new aws.SES({
-        apiVersion: "2010-12-01",
-        region: process.env.REGION,
-    });
-    const params = {
-        Destination: {
-            ToAddresses: [emailAddress],
-        },
-        Message: {
-            Body: {
-                Html: {
-                    Charset: "UTF-8",
-                    Data: `
-                    <p>
-                        Welcome to https://${process.env.PLATELET_DOMAIN_NAME}, ${recipientName}!
-                    </p>
-                    <p>
-                        Your account has been created. You can now start adding users to your team.
-                    </p>
-                    <p>
-                        You will be asked to change your password on first log in.
-                    </p>
-                    <p>
-                        <b>Username:</b> ${emailAddress}
-                    </p>
-                    <p>
-                        <b>Password:</b> ${password}
-                    </p>
-                    <p>
-                        <b>This temporary password will expire in one week.</b>
-                    </p>
-                    <p>
-                        Thank you.
-                    </p>
-                    `,
-                },
-                Text: {
-                    Charset: "UTF-8",
-                    Data: `Welcome to https://${process.env.PLATELET_DOMAIN_NAME}, ${recipientName}!
-                    Your account has been created. You can now start adding users to your team.
-                    You will be asked to change your password on first log in.
-                    Username: ${emailAddress}
-                    Password: ${password}
-                    Thank you.`,
-                },
-            },
-            Subject: {
-                Charset: "UTF-8",
-                Data: "Welcome to Platelet!",
-            },
-        },
-        Source: process.env.PLATELET_WELCOME_EMAIL,
-        ReplyToAddresses: [process.env.PLATELET_WELCOME_EMAIL],
-        ReturnPath: process.env.PLATELET_WELCOME_EMAIL,
-    };
-
-    return await ses.sendEmail(params).promise();
-}
 
 function generateReferenceIdentifier(tenantName) {
     if (!tenantName) {
@@ -299,6 +243,85 @@ async function updateUserTenantAndCognito(user, tenantId, cognitoId) {
     return result.data.updateUser;
 }
 
+const cleanUp = async (user, tenant, cognitoUser) => {
+    console.log("Cleaning up user and tenant");
+    const userPoolId = process.env.AUTH_PLATELET61A0AC07_USERPOOLID;
+    if (cognitoUser) {
+        console.log("Deleting cognito user:", cognitoUser.username);
+        const CognitoIdentityServiceProvider =
+            aws.CognitoIdentityServiceProvider;
+        const cognitoClient = new CognitoIdentityServiceProvider({
+            apiVersion: "2016-04-19",
+        });
+        await cognitoClient
+            .adminDeleteUser({
+                UserPoolId: userPoolId,
+                Username: user.username,
+            })
+            .promise();
+    }
+    if (user) {
+        console.log("Deleting user:", user.id);
+        const existingUser = await request(
+            {
+                query: getUser,
+                variables: { id: user.id },
+            },
+
+            GRAPHQL_ENDPOINT
+        );
+        const result = await existingUser.json();
+        if (result?.data?.getUser) {
+            const { id, _version } = result.data.getUser;
+            console.log("User id:", id, "version:", _version);
+            await request(
+                {
+                    query: deleteUser,
+                    variables: {
+                        input: {
+                            id,
+                            _version,
+                        },
+                    },
+                },
+                GRAPHQL_ENDPOINT
+            );
+        } else {
+            console.warn("User to clean up was not found");
+        }
+    }
+    if (tenant) {
+        console.log("Deleting tenant:", tenant.id);
+        const existingTenant = await request(
+            {
+                query: getTenant,
+                variables: { id: tenant.id },
+            },
+
+            GRAPHQL_ENDPOINT
+        );
+        const result = await existingTenant.json();
+        if (result?.data?.getTenant) {
+            const { id, _version } = result.data.getTenant;
+            console.log("Tenant id:", id, "version:", _version);
+            await request(
+                {
+                    query: deleteTenant,
+                    variables: {
+                        input: {
+                            id,
+                            _version,
+                        },
+                    },
+                },
+                GRAPHQL_ENDPOINT
+            );
+        } else {
+            console.warn("Tenant to clean up was not found");
+        }
+    }
+};
+
 exports.handler = async (event) => {
     console.log("Arguments:", event.arguments);
     console.log(
@@ -318,22 +341,32 @@ exports.handler = async (event) => {
     const tenant = {
         name: event.arguments.tenantName,
     };
-    const newUser = await createNewAdminUser(user);
-    const newTenant = await addTenant({ ...tenant, tenantAdminId: newUser.id });
-    const cognitoUser = await addUserToCognito(user, newTenant.id);
-    const admin = await updateUserTenantAndCognito(
-        newUser,
-        newTenant.id,
-        cognitoUser.sub
-    );
-    await setUserRoles(user.username);
-    console.log("Tenant result:", newTenant);
-    console.log("User result:", newUser);
-    await sendWelcomeEmail(
-        event.arguments.emailAddress,
-        event.arguments.name,
-        cognitoUser.password
-    );
-    console.log("Successfully sent welcome email");
-    return { ...newTenant, admin };
+    let newUser, newTenant, cognitoUser;
+    try {
+        newUser = await createNewAdminUser(user);
+        newTenant = await addTenant({
+            ...tenant,
+            tenantAdminId: newUser.id,
+        });
+        cognitoUser = await addUserToCognito(user, newTenant.id);
+        const admin = await updateUserTenantAndCognito(
+            newUser,
+            newTenant.id,
+            cognitoUser.sub
+        );
+        await setUserRoles(user.username);
+        console.log("Tenant result:", newTenant);
+        console.log("User result:", newUser);
+        await sendTenantWelcomeEmail(
+            event.arguments.emailAddress,
+            event.arguments.name,
+            cognitoUser.password
+        );
+        console.log("Successfully sent welcome email");
+        return { ...newTenant, admin };
+    } catch (e) {
+        console.error("Error:", e);
+        await cleanUp(newUser, newTenant, cognitoUser);
+        throw e;
+    }
 };

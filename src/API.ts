@@ -1177,6 +1177,12 @@ export type ModelTenantConnection = {
   startedAt?: number | null,
 };
 
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null,
   username?: ModelStringInput | null,
@@ -1201,12 +1207,6 @@ export type ModelUserConnection = {
   nextToken?: string | null,
   startedAt?: number | null,
 };
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
 
 export type ModelPossibleRiderResponsibilitiesFilterInput = {
   id?: ModelIDInput | null,
@@ -5087,6 +5087,34 @@ export type SyncTenantsQueryVariables = {
 
 export type SyncTenantsQuery = {
   syncTenants?:  {
+    __typename: "ModelTenantConnection",
+    items:  Array< {
+      __typename: "Tenant",
+      id: string,
+      name: string,
+      referenceIdentifier: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+      tenantAdminId: string,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type GetTenantByTenantNameQueryVariables = {
+  name: string,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelTenantFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type GetTenantByTenantNameQuery = {
+  getTenantByTenantName?:  {
     __typename: "ModelTenantConnection",
     items:  Array< {
       __typename: "Tenant",

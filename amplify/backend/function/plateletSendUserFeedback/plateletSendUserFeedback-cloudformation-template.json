@@ -15,12 +15,6 @@
     },
     "s3Key": {
       "Type": "String"
-    },
-    "plateletSendToEmailAddress": {
-      "Type": "String"
-    },
-    "plateletSendFromEmailAddress": {
-      "Type": "String"
     }
   },
   "Conditions": {
@@ -75,12 +69,6 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
-            },
-            "PLATELET_SEND_TO_EMAIL_ADDRESS": {
-              "Ref": "plateletSendToEmailAddress"
-            },
-            "PLATELET_SEND_FROM_EMAIL_ADDRESS": {
-              "Ref": "plateletSendFromEmailAddress"
             }
           }
         },
@@ -90,7 +78,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs18.x",
         "Layers": [],
         "Timeout": 25
       }

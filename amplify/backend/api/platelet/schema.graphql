@@ -1,10 +1,11 @@
 type Tenant
 @auth(rules: [
 {allow: private, operations: [read]},
+{allow: private, provider: iam, operations: [read]},
 ])
 @model {
   id: ID!
-  name: String!
+  name: String! @index(name: "byTenantName", queryField: "getTenantByTenantName")
   referenceIdentifier: String!
   admin: User! @hasOne
 }

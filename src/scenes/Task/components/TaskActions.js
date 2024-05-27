@@ -70,6 +70,23 @@ function TaskActions(props) {
 
     const errorMessage = "Sorry, something went wrong";
 
+    const stateChecker = () => {
+        const states = state.reduce((acc, key) => {
+            acc[key] = state.includes(key);
+            return acc;
+        }, {});
+        if (!states.timePickedUp) {
+            if (states.timeDroppedOff || states.timeRiderHome) {
+                return false;
+            }
+        } else if (!states.timeDroppedOff) {
+            if (states.timeRiderHome) {
+                return false;
+            }
+        }
+        return true;
+    };
+
     function onClickToggle(key) {
         setConfirmationKey(key);
     }
@@ -176,6 +193,7 @@ function TaskActions(props) {
     useEffect(() => () => taskObserver.current.unsubscribe(), []);
 
     function checkDisabled(key) {
+        if (!stateChecker()) return false;
         if (!hasFullPermissions || task.status === tasksStatus.pending)
             return true;
         const stopped =

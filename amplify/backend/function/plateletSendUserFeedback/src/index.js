@@ -9,15 +9,17 @@ Amplify Params - DO NOT EDIT */
 
 const aws = require("aws-sdk");
 
+const PLATELET_SEND_TO_EMAIL_ADDRESS = "info@platelet.app";
+const PLATELET_SEND_FROM_EMAIL_ADDRESS = "info@platelet.app";
+
 async function sendFeedbackEmail(body, senderEmail = null) {
     const ses = new aws.SES({
         apiVersion: "2010-12-01",
         region: process.env.REGION,
     });
-    const plateletEmail = process.env.PLATELET_SEND_TO_EMAIL_ADDRESS;
-    const Source = process.env.PLATELET_SEND_FROM_EMAIL_ADDRESS;
-    const returnEmailAddress =
-        senderEmail || process.env.PLATELET_SEND_TO_EMAIL_ADDRESS;
+    const plateletEmail = PLATELET_SEND_TO_EMAIL_ADDRESS;
+    const Source = PLATELET_SEND_FROM_EMAIL_ADDRESS;
+    const returnEmailAddress = senderEmail || PLATELET_SEND_TO_EMAIL_ADDRESS;
 
     const sender = senderEmail || "No email.";
 

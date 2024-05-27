@@ -488,22 +488,6 @@
         }
       ]
     },
-    "AMPLIFY_function_plateletAddNewTenant_plateletDomainName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "plateletAddNewTenant"
-        }
-      ]
-    },
-    "AMPLIFY_function_plateletAddNewTenant_plateletWelcomeEmail": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "plateletAddNewTenant"
-        }
-      ]
-    },
     "AMPLIFY_function_plateletAddNewTenant_s3Key": {
       "usedBy": [
         {
@@ -513,22 +497,6 @@
       ]
     },
     "AMPLIFY_function_plateletAdminAddNewUser_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "plateletAdminAddNewUser"
-        }
-      ]
-    },
-    "AMPLIFY_function_plateletAdminAddNewUser_plateletDomainName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "plateletAdminAddNewUser"
-        }
-      ]
-    },
-    "AMPLIFY_function_plateletAdminAddNewUser_plateletWelcomeEmail": {
       "usedBy": [
         {
           "category": "function",
@@ -609,22 +577,6 @@
       ]
     },
     "AMPLIFY_function_plateletAdminResetUserPassword_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "plateletAdminResetUserPassword"
-        }
-      ]
-    },
-    "AMPLIFY_function_plateletAdminResetUserPassword_plateletDomainName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "plateletAdminResetUserPassword"
-        }
-      ]
-    },
-    "AMPLIFY_function_plateletAdminResetUserPassword_plateletWelcomeEmail": {
       "usedBy": [
         {
           "category": "function",
@@ -753,22 +705,6 @@
       ]
     },
     "AMPLIFY_function_plateletSendUserFeedback_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "plateletSendUserFeedback"
-        }
-      ]
-    },
-    "AMPLIFY_function_plateletSendUserFeedback_plateletSendFromEmailAddress": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "plateletSendUserFeedback"
-        }
-      ]
-    },
-    "AMPLIFY_function_plateletSendUserFeedback_plateletSendToEmailAddress": {
       "usedBy": [
         {
           "category": "function",

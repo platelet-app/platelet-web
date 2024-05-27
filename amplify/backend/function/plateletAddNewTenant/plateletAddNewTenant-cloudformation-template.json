@@ -35,12 +35,6 @@
     "functionplateletappSyncOperationsArn": {
       "Type": "String",
       "Default": "functionplateletappSyncOperationsArn"
-    },
-    "plateletWelcomeEmail": {
-      "Type": "String"
-    },
-    "plateletDomainName": {
-      "Type": "String"
     }
   },
   "Conditions": {
@@ -104,12 +98,6 @@
             },
             "API_PLATELET_GRAPHQLAPIENDPOINTOUTPUT": {
               "Ref": "apiplateletGraphQLAPIEndpointOutput"
-            },
-            "PLATELET_WELCOME_EMAIL": {
-              "Ref": "plateletWelcomeEmail"
-            },
-            "PLATELET_DOMAIN_NAME": {
-              "Ref": "plateletDomainName"
             }
           }
         },
@@ -119,7 +107,7 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs14.x",
+        "Runtime": "nodejs18.x",
         "Layers": [
           {
             "Ref": "functionplateletappSyncOperationsArn"

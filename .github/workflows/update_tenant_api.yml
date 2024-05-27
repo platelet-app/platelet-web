@@ -26,32 +26,43 @@ jobs:
     - name: Wait for Amplify to finish remote build
       uses: duckbytes/amplify-build-status@master
       with:
-        app-id: ${{ secrets.AMPLIFY_APP_ID }}
+        app-id: ${{ vars.AMPLIFY_APP_ID }}
         branch-name: ${{ github.ref_name }}
         commit-id: ${{ github.sha }}
         wait: ${{ github.event_name == 'workflow_dispatch' && inputs.wait_for_amplify || true }}
+      id: amplify_status
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
+        AWS_REGION: ${{ vars.AWS_REGION }}
     - name: Install Amplify CLI and pull project
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
+        AWS_REGION: ${{ vars.AWS_REGION }}
       run: |
-        npm install -g @aws-amplify/cli@10.8 @babel/cli --unsafe-perm=true
+        npm install -g @aws-amplify/cli @babel/cli --unsafe-perm=true
         npm install --save-dev @babel/plugin-transform-modules-commonjs
-        amplify pull --appId ${{ secrets.AMPLIFY_APP_ID }} --envName ${{ secrets.AMPLIFY_ENV_NAME }} -y
+        amplify pull --appId ${{ vars.AMPLIFY_APP_ID }} --envName ${{ steps.amplify_status.outputs.environment_name }} -y
         babel --plugins @babel/plugin-transform-modules-commonjs src/aws-exports.js > src/aws-exports-es5.js
     - name: Update the tenant API
       uses: platelet-app/update-tenant-api-action@main
       with:
-        awsEnvName: ${{ secrets.AMPLIFY_ENV_NAME }}
+        awsEnvName: ${{ steps.amplify_status.outputs.environment_name }}
         awsExportsFilepath: ${{ github.workspace }}/src/aws-exports-es5.js
         awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
         awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        awsRegion: ${{ secrets.AWS_REGION }}
-        apiURL: ${{ secrets.API_URL }}
-        amplifyEnvName: ${{ secrets.AMPLIFY_ENV_NAME }}
+        awsRegion: ${{ vars.AWS_REGION }}
+        apiURL: ${{ vars.API_URL }}
+        amplifyEnvName: ${{ steps.amplify_status.outputs.environment_name }}
         tenantName: ${{ vars.TENANT_NAME }}
+    - name: Register the tenant admin
+      uses: platelet-app/register-tenant-action@master
+      with:
+        awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        awsRegion: ${{ vars.AWS_REGION }}
+        tenantApiUrl: ${{ steps.amplify_status.outputs.graphql_endpoint }}
+        tenantName: ${{ vars.TENANT_NAME }}
+        adminName: ${{ vars.ADMIN_NAME }}
+        adminEmail: ${{ vars.ADMIN_EMAIL }}
