@@ -61,7 +61,6 @@ declare module "@mui/material/styles" {
 }
 
 Logger.LOG_LEVEL = "ERROR";
-//
 
 (window as any).amplifyLogger = Logger;
 (window as any).DataStore = DataStore;
