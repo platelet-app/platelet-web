@@ -1,4 +1,4 @@
-import uuidBase62 from "uuid-base62";
+import uuidBase62 from "uuid62";
 import { v4 as uuidv4 } from "uuid";
 import { deliverableIcons, tasksStatus, userRoles } from "./apiConsts";
 import BugIcon from "./components/deliverableIcons/BugIcon";

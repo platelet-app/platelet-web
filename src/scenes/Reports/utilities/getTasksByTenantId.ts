@@ -29,6 +29,8 @@ export const listTasksByTenantId = /* GraphQL */ `
                 priority
                 status
                 timePickedUp
+                timePickedUpSenderName
+                timeDroppedOffRecipientName
                 timeDroppedOff
                 timeRiderHome
                 timeRejected

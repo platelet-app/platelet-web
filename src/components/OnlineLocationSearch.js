@@ -10,6 +10,8 @@ import throttle from "lodash/throttle";
 import { useDispatch } from "react-redux";
 import { displayErrorNotification } from "../redux/notifications/NotificationsActions";
 
+import { useMapsLibrary } from "@vis.gl/react-google-maps";
+
 const extractAddressComponents = (addressComponents) => {
     const address = {};
     addressComponents.forEach((component) => {
@@ -74,8 +76,6 @@ const getPlacesAddressById = async (placeId) =>
         }
     });
 
-const autocompleteService = { current: null };
-
 const placesOptions = {
     componentRestrictions: { country: "uk" },
 };
@@ -84,27 +84,29 @@ export default function OnlineLocationSearch({ onSelect }) {
     const [value, setValue] = React.useState(null);
     const [inputValue, setInputValue] = React.useState("");
     const [options, setOptions] = React.useState([]);
+    const [autoCompleteService, setAutoCompleteService] = React.useState(null);
     const dispatch = useDispatch();
+
+    const autoCompleteLibrary = useMapsLibrary("places");
 
     const fetch = React.useMemo(
         () =>
             throttle((request, callback) => {
-                autocompleteService.current.getPlacePredictions(
-                    request,
-                    callback
-                );
+                autoCompleteService?.getPlacePredictions(request, callback);
             }, 200),
-        []
+        [autoCompleteService]
     );
 
     React.useEffect(() => {
-        let active = true;
+        if (autoCompleteLibrary)
+            setAutoCompleteService(
+                new autoCompleteLibrary.AutocompleteService()
+            );
+    }, [autoCompleteLibrary]);
 
-        if (!autocompleteService.current && window.google) {
-            autocompleteService.current =
-                new window.google.maps.places.AutocompleteService();
-        }
-        if (!autocompleteService.current) {
+    React.useEffect(() => {
+        let active = true;
+        if (!autoCompleteService) {
             return undefined;
         }
 
@@ -132,7 +134,7 @@ export default function OnlineLocationSearch({ onSelect }) {
         return () => {
             active = false;
         };
-    }, [value, inputValue, fetch]);
+    }, [value, inputValue, fetch, autoCompleteService]);
 
     const onChange = React.useCallback(
         (event, newValue) => {

@@ -79,6 +79,7 @@ function FavouriteLocationsSelect(props) {
 
     debouncedSearch.current = React.useMemo(() => {
         return _.debounce(async (searchTerm) => {
+            if (process.env.REACT_APP_DEMO_MODE === "true") return;
             if (searchTerm.length > 2) {
                 const result = await Geo.searchByText(searchTerm, {
                     countries: ["GBR"],

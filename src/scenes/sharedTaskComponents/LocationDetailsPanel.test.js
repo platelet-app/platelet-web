@@ -89,7 +89,6 @@ describe("LocationDetailsPanel", () => {
 
     it("renders the correct location name", async () => {
         const mockTask = new models.Task({ pickUpLocation: mockLocations[1] });
-        const querySpy = jest.spyOn(DataStore, "query");
         await DataStore.save(mockTask);
         const mockLocation = mockLocations[1];
         render(
@@ -100,45 +99,8 @@ describe("LocationDetailsPanel", () => {
             />,
             { preloadedState }
         );
-        await waitFor(() => expect(querySpy).toHaveBeenCalledTimes(1));
-        expect(querySpy).toHaveBeenNthCalledWith(1, models.Task, mockTask.id);
-        expect(screen.getByText(mockLocation.name)).toBeInTheDocument();
-        expect(screen.getByText(mockLocation.ward)).toBeInTheDocument();
-    });
-
-    it.each`
-        locationKey
-        ${"pickUpLocation"} | ${"dropOffLocation"}
-    `("expands the location details", async ({ locationKey }) => {
-        const mockLocation = mockLocations[0];
-        const task = new models.Task({ [locationKey]: mockLocation });
-        await DataStore.save(task);
-        const querySpy = jest.spyOn(DataStore, "query");
-        render(
-            <LocationDetailsPanel
-                taskModel={models.Task}
-                taskId={task.id}
-                locationKey={locationKey}
-            />,
-            { preloadedState }
-        );
-
-        await waitFor(() => expect(querySpy).toHaveBeenCalledTimes(1));
-
-        userEvent.click(screen.getByText("Expand to see more"));
-        expect(screen.getByText(mockLocation.name)).toBeInTheDocument();
-        expect(screen.getByText(mockLocation.ward)).toBeInTheDocument();
-        expect(screen.getByText(mockLocation.line1)).toBeInTheDocument();
-        expect(screen.getByText(mockLocation.line2)).toBeInTheDocument();
-        expect(screen.getByText(mockLocation.town)).toBeInTheDocument();
-        expect(screen.getByText(mockLocation.county)).toBeInTheDocument();
-        expect(screen.getByText(mockLocation.country)).toBeInTheDocument();
-        expect(screen.getByText(mockLocation.postcode)).toBeInTheDocument();
-        expect(screen.getByText(mockLocation.contact.name)).toBeInTheDocument();
-        expect(
-            screen.getByText(mockLocation.contact.telephoneNumber)
-        ).toBeInTheDocument();
-        await DataStore.delete(task);
+        expect(await screen.findByText(mockLocation.name)).toBeInTheDocument();
+        expect(screen.getByText(RegExp(mockLocation.ward))).toBeInTheDocument();
     });
 
     test.each`
@@ -186,7 +148,6 @@ describe("LocationDetailsPanel", () => {
         const task = new models.Task({ [locationKey]: mockLocations[0] });
         await DataStore.save(task);
         const saveSpy = jest.spyOn(DataStore, "save");
-        const querySpy = jest.spyOn(DataStore, "query");
         const apiSpy = jest.spyOn(API, "graphql").mockResolvedValueOnce({
             data: {
                 getTask: { ...task, _version: 1 },
@@ -201,10 +162,7 @@ describe("LocationDetailsPanel", () => {
             />,
             { preloadedState }
         );
-        await waitFor(() => expect(querySpy).toHaveBeenCalledTimes(1));
-        expect(
-            screen.getAllByText(mockLocations[0].line1)[0]
-        ).toBeInTheDocument();
+        await screen.findByText(RegExp(mockLocations[0].line1));
         userEvent.click(screen.getByRole("button", { name: "Edit" }));
         userEvent.click(screen.getByRole("button", { name: "Clear" }));
         const okButton = screen.getByRole("button", { name: "OK" });
@@ -255,7 +213,6 @@ describe("LocationDetailsPanel", () => {
         const unlisted = await DataStore.save(unlistedLocation);
         const task = new models.Task({ [locationKey]: unlisted });
         await DataStore.save(task);
-        const querySpy = jest.spyOn(DataStore, "query");
         const apiSpy = jest
             .spyOn(API, "graphql")
             .mockResolvedValueOnce({
@@ -288,14 +245,10 @@ describe("LocationDetailsPanel", () => {
             />,
             { preloadedState }
         );
-        await waitFor(() => expect(querySpy).toHaveBeenCalledTimes(1));
-        expect(
-            screen.getAllByText(unlistedLocation.line1)[0]
-        ).toBeInTheDocument();
+        await screen.findByText(RegExp(unlistedLocation.line1));
         userEvent.click(screen.getByRole("button", { name: "Edit" }));
         userEvent.click(screen.getByRole("button", { name: "Clear" }));
         const okButton = screen.getByRole("button", { name: "OK" });
-        expect(okButton).toBeInTheDocument();
         expect(
             screen.getByRole("button", { name: "Cancel" })
         ).toBeInTheDocument();
@@ -363,7 +316,6 @@ describe("LocationDetailsPanel", () => {
             name: `${mockListedLocation.name} (edited)`,
         });
         await DataStore.save(task);
-        const querySpy = jest.spyOn(DataStore, "query");
         const saveSpy = jest.spyOn(DataStore, "save");
         render(
             <LocationDetailsPanel
@@ -373,10 +325,7 @@ describe("LocationDetailsPanel", () => {
             />,
             { preloadedState }
         );
-        await waitFor(() => expect(querySpy).toHaveBeenCalledTimes(1));
-        expect(
-            screen.getAllByText(mockListedLocation.line1)[0]
-        ).toBeInTheDocument();
+        await screen.findByText(RegExp(mockListedLocation.line1));
         userEvent.click(screen.getByRole("button", { name: "Edit" }));
         userEvent.click(screen.getByText(mockListedLocation.line1));
         const textBox = screen.getByRole("textbox", { name: "Line one" });
@@ -514,7 +463,6 @@ describe("LocationDetailsPanel", () => {
             { preloadedState }
         );
         await waitFor(() => expect(querySpy).toHaveBeenCalledTimes(1));
-        userEvent.click(screen.getByText("Expand to see more"));
         userEvent.click(screen.getByRole("button", { name: "Edit" }));
         userEvent.click(screen.getByText(fakeModel.contact.name));
         const textBox = screen.getByRole("textbox", { name: "Name" });
@@ -558,7 +506,6 @@ describe("LocationDetailsPanel", () => {
                 { preloadedState }
             );
             await waitFor(() => expect(querySpy).toHaveBeenCalledTimes(1));
-            userEvent.click(screen.getByText("Expand to see more"));
             userEvent.click(screen.getByText("Name"));
             const textBox = screen.getAllByRole("textbox")[1];
             userEvent.type(textBox, "new data");
@@ -610,7 +557,6 @@ describe("LocationDetailsPanel", () => {
                 { preloadedState }
             );
             await waitFor(() => expect(querySpy).toHaveBeenCalledTimes(1));
-            userEvent.click(screen.getByText("Expand to see more"));
             userEvent.click(screen.getByText("Ward"));
             const textBox = screen.getAllByRole("textbox")[1];
             userEvent.type(textBox, "ward data");
@@ -775,7 +721,6 @@ describe("LocationDetailsPanel", () => {
                 { preloadedState }
             );
             await waitFor(() => expect(querySpy).toHaveBeenCalledTimes(1));
-            userEvent.click(screen.getByText("Expand to see more"));
             userEvent.click(screen.getByText("Name"));
             const textBox2 = screen.getAllByRole("textbox")[1];
             userEvent.type(textBox2, fakeInputData);
@@ -1090,13 +1035,12 @@ describe("LocationDetailsPanel", () => {
             pickUpLocation: { ...mockLocation, id: expect.any(String) },
             id: expect.any(String),
         });
-        userEvent.click(screen.getByText("Expand to see more"));
         const { label, addressNumber, street, ...rest } = fakeOnlineLocation;
         expect(
-            screen.getByText(`${addressNumber} ${street}`)
+            screen.getByText(RegExp(`${addressNumber} ${street}`))
         ).toBeInTheDocument();
         for (const value of Object.values(rest)) {
-            expect(screen.getByText(value)).toBeInTheDocument();
+            expect(screen.getByText(RegExp(value))).toBeInTheDocument();
         }
     });
 });

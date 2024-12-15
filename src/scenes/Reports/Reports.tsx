@@ -11,7 +11,6 @@ import {
     tenantIdSelector,
 } from "../../redux/Selectors";
 import moment from "moment";
-import ConfirmationDialog from "../../components/ConfirmationDialog";
 import { displayErrorNotification } from "../../redux/notifications/NotificationsActions";
 import ReportsControls from "./components/ReportsControls";
 import { Days } from "../../components/DaysSelection";
@@ -127,11 +126,6 @@ function Reports() {
         }
     };
 
-    const handleOnConfirm = () => {
-        setConfirmation(false);
-        handleExport();
-    };
-
     const handleChangeDateRange = (startDate: Date, endDate: Date) => {
         dateRange.current = { startDate, endDate };
     };
@@ -177,18 +171,6 @@ function Reports() {
                     {showLoading && <CircularProgress />}
                 </Stack>
             </Stack>
-            <ConfirmationDialog
-                open={confirmation}
-                onConfirmation={handleOnConfirm}
-                onCancel={() => setConfirmation(false)}
-                onClose={() => setConfirmation(false)}
-                dialogTitle={"Data still syncing"}
-            >
-                <Typography>
-                    Some data may not be downloaded yet. Do you still want to
-                    export?
-                </Typography>
-            </ConfirmationDialog>
         </PaddedPaper>
     );
 }

@@ -10,11 +10,7 @@
         {
             "username": "offline",
             "displayName": "Offline User",
-            "roles": [
-                "RIDER",
-                "COORDINATOR",
-                "ADMIN"
-            ],
+            "roles": ["RIDER", "COORDINATOR", "ADMIN"],
             "name": "Offline User",
             "dateOfBirth": null,
             "address": {
@@ -43,9 +39,7 @@
                 "postcode": "BS19NR",
                 "what3words": "some.what.words"
             },
-            "roles": [
-                "COORDINATOR"
-            ],
+            "roles": ["COORDINATOR"],
             "active": 1,
             "disabled": 0
         },
@@ -62,9 +56,7 @@
                 "postcode": "BS6 8ZY",
                 "what3words": "some.what.words"
             },
-            "roles": [
-                "COORDINATOR"
-            ],
+            "roles": ["COORDINATOR"],
             "active": 1,
             "disabled": 0
         },
@@ -81,9 +73,7 @@
                 "postcode": "BS1 1PA",
                 "what3words": "some.what.words"
             },
-            "roles": [
-                "RIDER"
-            ],
+            "roles": ["RIDER"],
             "active": 1,
             "disabled": 0
         },
@@ -100,10 +90,7 @@
                 "postcode": "BS1 3ZR",
                 "what3words": "some.what.words"
             },
-            "roles": [
-                "RIDER",
-                "COORDINATOR"
-            ],
+            "roles": ["RIDER", "COORDINATOR"],
             "active": 1,
             "disabled": 0
         },
@@ -120,10 +107,7 @@
                 "postcode": "BS6 1PP",
                 "what3words": "some.what.words"
             },
-            "roles": [
-                "RIDER",
-                "COORDINATOR"
-            ],
+            "roles": ["RIDER", "COORDINATOR"],
             "active": 1,
             "disabled": 0
         },
@@ -140,23 +124,21 @@
                 "postcode": "BS1 3YD",
                 "what3words": "some.what.words"
             },
-            "roles": [
-                "RIDER"
-            ],
+            "roles": ["RIDER"],
             "active": 1,
             "disabled": 0
         }
     ],
     "locations": [
         {
-            "name": "Bristol Royal Infirmary",
+            "name": "Blackberry Hill Hospital",
             "address": {
-                "line1": "Bristol Royal Infirmary",
-                "line2": "Marlborough Street",
+                "line1": "Blackberry Hill Hospital",
+                "line2": "Manor Road",
                 "town": "Bristol",
                 "county": "Bristol",
                 "country": "UK",
-                "postcode": "BS2 8HW",
+                "postcode": "BS16 2EW",
                 "what3words": "some.what.words"
             },
             "listed": 1,
@@ -193,30 +175,14 @@
             "disabled": 0
         },
         {
-            "name": "Southmead Hospital - NICU",
+            "name": "Clevedon Hospital",
             "address": {
-                "ward": "Neonatal Intensive Care",
-                "line1": "Southmead Hospital",
-                "line2": "Southmead Road",
+                "line1": "Clevedon Hospital",
+                "line2": "Old Street",
                 "town": "Bristol",
                 "county": "Bristol",
                 "country": "UK",
-                "postcode": "BS10 5NB",
-                "what3words": "some.what.words"
-            },
-            "listed": 1,
-            "disabled": 0
-        },
-        {
-            "name": "Callington Road Hospital - Aspen",
-            "address": {
-                "ward": "Aspen Unit",
-                "line1": "Callington Road Hospital",
-                "line2": "Marmalade Lane",
-                "town": "Brislington",
-                "county": "Bristol",
-                "country": "UK",
-                "postcode": "BS4 5BJ",
+                "postcode": "BS21 6BS",
                 "what3words": "some.what.words"
             },
             "listed": 1,
@@ -282,90 +248,70 @@
     "deliverables": [
         {
             "label": "Sample",
-            "tags": [
-                "sample"
-            ],
+            "tags": ["sample"],
             "icon": "BUG",
             "defaultUnit": "ITEM",
             "disabled": 0
         },
         {
             "label": "Covid sample",
-            "tags": [
-                "sample"
-            ],
+            "tags": ["sample"],
             "icon": "BUG",
             "defaultUnit": "ITEM",
             "disabled": 0
         },
         {
             "label": "MRSA sample",
-            "tags": [
-                "sample"
-            ],
+            "tags": ["sample"],
             "icon": "BUG",
             "defaultUnit": "ITEM",
             "disabled": 0
         },
         {
             "label": "Document",
-            "tags": [
-                "document"
-            ],
+            "tags": ["document"],
             "icon": "DOCUMENT",
             "defaultUnit": "ITEM",
             "disabled": 0
         },
         {
             "label": "Milk",
-            "tags": [
-                "maternity"
-            ],
+            "tags": ["maternity"],
             "icon": "CHILD",
             "defaultUnit": "LITRE",
             "disabled": 0
         },
         {
             "label": "Anti-D",
-            "tags": [
-                "maternity"
-            ],
+            "tags": ["maternity"],
             "icon": "CHILD",
             "defaultUnit": "LITRE",
             "disabled": 0
         },
         {
             "label": "Bloods",
-            "tags": [
-                "blood"
-            ],
+            "tags": ["blood"],
             "icon": "OTHER",
             "defaultUnit": "LITRE",
             "disabled": 0
         },
         {
             "label": "Platelets",
-            "tags": [
-                "blood"
-            ],
+            "tags": ["blood"],
             "icon": "OTHER",
             "defaultUnit": "LITRE",
             "disabled": 0
         },
         {
             "label": "Bloods",
-            "tags": [
-                "blood"
-            ],
+            "tags": ["blood"],
             "icon": "OTHER",
             "defaultUnit": "LITRE",
             "disabled": 0
         },
         {
             "label": "Equipment",
-            "tags": [
-                "equipment"
-            ],
+            "tags": ["equipment"],
             "icon": "EQUIPMENT",
             "defaultUnit": "ITEM",
             "disabled": 0

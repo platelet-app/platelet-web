@@ -46,7 +46,7 @@ function ClearButtonWithConfirmation(props) {
 ClearButtonWithConfirmation.propTypes = {
     disabled: PropTypes.bool,
     onClear: PropTypes.func,
-    children: PropTypes.node,
+    children: PropTypes.any,
 };
 
 ClearButtonWithConfirmation.defaultProps = {

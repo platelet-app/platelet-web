@@ -1,17 +1,371 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`generateReports generate a report with ALL tasks 1`] = `
+Object {
+  "query": "
+    query ListTasksByTenantId(
+        $filter: ModelTaskFilterInput
+        $limit: Int
+        $nextToken: String
+        $tenantId: ID!
+        $sortDirection: ModelSortDirection
+        $startDate: String
+        $endDate: String
+    ) {
+        listTasksByTenantId(
+            filter: $filter
+            limit: $limit
+            nextToken: $nextToken
+            tenantId: $tenantId
+            sortDirection: $sortDirection
+            createdAt: { between: [$startDate, $endDate] }
+        ) {
+            items {
+                id
+                createdAt
+                timeOfCall
+                riderResponsibility
+                isRiderUsingOwnVehicle
+                priority
+                status
+                timePickedUp
+                timePickedUpSenderName
+                timeDroppedOffRecipientName
+                timeDroppedOff
+                timeRiderHome
+                timeRejected
+                timeCancelled
+                dateCreated
+                requesterContact {
+                    name
+                    telephoneNumber
+                }
+                assignees {
+                    items {
+                        assignee {
+                            id
+                            _deleted
+                            displayName
+                            name
+                        }
+                        role
+                    }
+                }
+                pickUpLocation {
+                    ward
+                    line1
+                    line2
+                    line3
+                    town
+                    county
+                    state
+                    country
+                    postcode
+                    what3words
+                    listed
+                }
+                dropOffLocation {
+                    ward
+                    line1
+                    line2
+                    line3
+                    town
+                    county
+                    state
+                    country
+                    postcode
+                    what3words
+                    listed
+                }
+                deliverables {
+                    items {
+                        count
+                        _deleted
+                        deliverableType {
+                            label
+                            icon
+                        }
+                    }
+                }
+                comments {
+                    items {
+                        id
+                        _deleted
+                        visibility
+                        author {
+                            displayName
+                            name
+                            id
+                        }
+                        body
+                    }
+                }
+                _version
+                _deleted
+                _lastChangedAt
+            }
+            nextToken
+            startedAt
+        }
+    }
+",
+  "variables": Object {
+    "endDate": "2021-11-30T00:00:00.000Z",
+    "nextToken": null,
+    "startDate": "2021-11-26T00:00:00.000Z",
+    "tenantId": "tenantId",
+  },
+}
+`;
+
 exports[`generateReports generate a report with ALL tasks 2`] = `
-"createdAt,timeOfCall,riderResponsibility,isRiderUsingOwnVehicle,priority,status,timePickedUp,timeDroppedOff,timeRiderHome,timeRejected,timeCancelled,requesterContact_name,requesterContact_telephoneNumber,pickUpLocation_ward,pickUpLocation_line1,pickUpLocation_town,pickUpLocation_postcode,pickUpLocation_listed,dropOffLocation_ward,dropOffLocation_line1,dropOffLocation_town,dropOffLocation_postcode,dropOffLocation_listed,assignee_0_name,assignee_0_role,assignee_1_name,assignee_1_role,assignee_2_name,assignee_2_role,item_0_label,item_0_count,item_1_label,item_1_count,comment_0_author,comment_0_body,comment_1_author,comment_1_body
-2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,yay rider role,FALSE,MEDIUM,NEW,2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,,2021-11-29T23:24:58.987Z,some person,0121212121,pickup ward1,pickup line1,pickup town,pickup postcode,TRUE,dropoff ward,dropoff line1,dropoff town,dropoff postcode,TRUE,Coordinator name,COORDINATOR,Whoami name,COORDINATOR,Rider 1 name,RIDER,deliverable 1,5,deliverable 2,6,Rider 1,body 1,Rider 1,body 2
-2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,yay rider role,FALSE,MEDIUM,ACTIVE,2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,,some name,01234567890,pickup ward1,pickup line1,pickup town,pickup postcode,TRUE,dropoff ward,dropoff line1,dropoff town,dropoff postcode,TRUE,Rider 2 name,RIDER,,,,,deliverable 3,7"
+"createdAt,timeOfCall,riderResponsibility,isRiderUsingOwnVehicle,priority,status,timePickedUp,timePickedUpSenderName,timeDroppedOff,timeDroppedOffRecipientName,timeRiderHome,timeRejected,timeCancelled,requesterContact_name,requesterContact_telephoneNumber,pickUpLocation_ward,pickUpLocation_line1,pickUpLocation_town,pickUpLocation_postcode,pickUpLocation_listed,dropOffLocation_ward,dropOffLocation_line1,dropOffLocation_town,dropOffLocation_postcode,dropOffLocation_listed,assignee_0_name,assignee_0_role,assignee_1_name,assignee_1_role,assignee_2_name,assignee_2_role,item_0_label,item_0_count,item_1_label,item_1_count,comment_0_author,comment_0_body,comment_1_author,comment_1_body
+2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,yay rider role,FALSE,MEDIUM,NEW,2021-11-29T23:24:58.987Z,sender name,2021-11-29T23:24:58.987Z,recipient name,2021-11-29T23:24:58.987Z,,2021-11-29T23:24:58.987Z,some person,0121212121,pickup ward1,pickup line1,pickup town,pickup postcode,TRUE,dropoff ward,dropoff line1,dropoff town,dropoff postcode,TRUE,Coordinator name,COORDINATOR,Whoami name,COORDINATOR,Rider 1 name,RIDER,deliverable 1,5,deliverable 2,6,Rider 1,body 1,Rider 1,body 2
+2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,yay rider role,FALSE,MEDIUM,ACTIVE,2021-11-29T23:24:58.987Z,sender name2,2021-11-29T23:24:58.987Z,recipient name2,2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,,some name,01234567890,pickup ward1,pickup line1,pickup town,pickup postcode,TRUE,dropoff ward,dropoff line1,dropoff town,dropoff postcode,TRUE,Rider 2 name,RIDER,,,,,deliverable 3,7"
+`;
+
+exports[`generateReports generate a report with a role graphql 1`] = `
+Object {
+  "query": "
+    query ListTasksByTenantId(
+        $filter: ModelTaskFilterInput
+        $limit: Int
+        $nextToken: String
+        $tenantId: ID!
+        $sortDirection: ModelSortDirection
+        $startDate: String
+        $endDate: String
+    ) {
+        listTasksByTenantId(
+            filter: $filter
+            limit: $limit
+            nextToken: $nextToken
+            tenantId: $tenantId
+            sortDirection: $sortDirection
+            createdAt: { between: [$startDate, $endDate] }
+        ) {
+            items {
+                id
+                createdAt
+                timeOfCall
+                riderResponsibility
+                isRiderUsingOwnVehicle
+                priority
+                status
+                timePickedUp
+                timePickedUpSenderName
+                timeDroppedOffRecipientName
+                timeDroppedOff
+                timeRiderHome
+                timeRejected
+                timeCancelled
+                dateCreated
+                requesterContact {
+                    name
+                    telephoneNumber
+                }
+                assignees {
+                    items {
+                        assignee {
+                            id
+                            _deleted
+                            displayName
+                            name
+                        }
+                        role
+                    }
+                }
+                pickUpLocation {
+                    ward
+                    line1
+                    line2
+                    line3
+                    town
+                    county
+                    state
+                    country
+                    postcode
+                    what3words
+                    listed
+                }
+                dropOffLocation {
+                    ward
+                    line1
+                    line2
+                    line3
+                    town
+                    county
+                    state
+                    country
+                    postcode
+                    what3words
+                    listed
+                }
+                deliverables {
+                    items {
+                        count
+                        _deleted
+                        deliverableType {
+                            label
+                            icon
+                        }
+                    }
+                }
+                comments {
+                    items {
+                        id
+                        _deleted
+                        visibility
+                        author {
+                            displayName
+                            name
+                            id
+                        }
+                        body
+                    }
+                }
+                _version
+                _deleted
+                _lastChangedAt
+            }
+            nextToken
+            startedAt
+        }
+    }
+",
+  "variables": Object {
+    "endDate": "2021-11-30T00:00:00.000Z",
+    "nextToken": null,
+    "startDate": "2021-11-26T00:00:00.000Z",
+    "tenantId": "tenantId",
+  },
+}
 `;
 
 exports[`generateReports generate a report with a role graphql 2`] = `
-"createdAt,timeOfCall,riderResponsibility,isRiderUsingOwnVehicle,priority,status,timePickedUp,timeDroppedOff,timeRiderHome,timeRejected,timeCancelled,requesterContact_name,requesterContact_telephoneNumber,pickUpLocation_ward,pickUpLocation_line1,pickUpLocation_town,pickUpLocation_postcode,pickUpLocation_listed,dropOffLocation_ward,dropOffLocation_line1,dropOffLocation_town,dropOffLocation_postcode,dropOffLocation_listed,assignee_0_name,assignee_0_role,item_0_label,item_0_count,item_1_label,item_1_count,comment_0_author,comment_0_body,comment_1_author,comment_1_body
-2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,yay rider role,FALSE,MEDIUM,NEW,2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,,2021-11-29T23:24:58.987Z,some person,0121212121,pickup ward1,pickup line1,pickup town,pickup postcode,TRUE,dropoff ward,dropoff line1,dropoff town,dropoff postcode,TRUE,Whoami name,COORDINATOR,deliverable 1,5,deliverable 2,6,Whoami,body 1,Whoami,body 2"
+"createdAt,timeOfCall,riderResponsibility,isRiderUsingOwnVehicle,priority,status,timePickedUp,timePickedUpSenderName,timeDroppedOff,timeDroppedOffRecipientName,timeRiderHome,timeRejected,timeCancelled,requesterContact_name,requesterContact_telephoneNumber,pickUpLocation_ward,pickUpLocation_line1,pickUpLocation_town,pickUpLocation_postcode,pickUpLocation_listed,dropOffLocation_ward,dropOffLocation_line1,dropOffLocation_town,dropOffLocation_postcode,dropOffLocation_listed,assignee_0_name,assignee_0_role,item_0_label,item_0_count,item_1_label,item_1_count,comment_0_author,comment_0_body,comment_1_author,comment_1_body
+2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,yay rider role,FALSE,MEDIUM,NEW,2021-11-29T23:24:58.987Z,sender name,2021-11-29T23:24:58.987Z,recipient name,2021-11-29T23:24:58.987Z,,2021-11-29T23:24:58.987Z,some person,0121212121,pickup ward1,pickup line1,pickup town,pickup postcode,TRUE,dropoff ward,dropoff line1,dropoff town,dropoff postcode,TRUE,Whoami name,COORDINATOR,deliverable 1,5,deliverable 2,6,Whoami,body 1,Whoami,body 2"
+`;
+
+exports[`generateReports generate a report with a role graphql 3`] = `
+Object {
+  "query": "
+    query ListTasksByTenantId(
+        $filter: ModelTaskFilterInput
+        $limit: Int
+        $nextToken: String
+        $tenantId: ID!
+        $sortDirection: ModelSortDirection
+        $startDate: String
+        $endDate: String
+    ) {
+        listTasksByTenantId(
+            filter: $filter
+            limit: $limit
+            nextToken: $nextToken
+            tenantId: $tenantId
+            sortDirection: $sortDirection
+            createdAt: { between: [$startDate, $endDate] }
+        ) {
+            items {
+                id
+                createdAt
+                timeOfCall
+                riderResponsibility
+                isRiderUsingOwnVehicle
+                priority
+                status
+                timePickedUp
+                timePickedUpSenderName
+                timeDroppedOffRecipientName
+                timeDroppedOff
+                timeRiderHome
+                timeRejected
+                timeCancelled
+                dateCreated
+                requesterContact {
+                    name
+                    telephoneNumber
+                }
+                assignees {
+                    items {
+                        assignee {
+                            id
+                            _deleted
+                            displayName
+                            name
+                        }
+                        role
+                    }
+                }
+                pickUpLocation {
+                    ward
+                    line1
+                    line2
+                    line3
+                    town
+                    county
+                    state
+                    country
+                    postcode
+                    what3words
+                    listed
+                }
+                dropOffLocation {
+                    ward
+                    line1
+                    line2
+                    line3
+                    town
+                    county
+                    state
+                    country
+                    postcode
+                    what3words
+                    listed
+                }
+                deliverables {
+                    items {
+                        count
+                        _deleted
+                        deliverableType {
+                            label
+                            icon
+                        }
+                    }
+                }
+                comments {
+                    items {
+                        id
+                        _deleted
+                        visibility
+                        author {
+                            displayName
+                            name
+                            id
+                        }
+                        body
+                    }
+                }
+                _version
+                _deleted
+                _lastChangedAt
+            }
+            nextToken
+            startedAt
+        }
+    }
+",
+  "variables": Object {
+    "endDate": "2021-11-30T00:00:00.000Z",
+    "nextToken": null,
+    "startDate": "2021-11-26T00:00:00.000Z",
+    "tenantId": "tenantId",
+  },
+}
 `;
 
 exports[`generateReports generate a report with a role graphql 4`] = `
-"createdAt,timeOfCall,riderResponsibility,isRiderUsingOwnVehicle,priority,status,timePickedUp,timeDroppedOff,timeRiderHome,timeRejected,timeCancelled,requesterContact_name,requesterContact_telephoneNumber,pickUpLocation_ward,pickUpLocation_line1,pickUpLocation_town,pickUpLocation_postcode,pickUpLocation_listed,dropOffLocation_ward,dropOffLocation_line1,dropOffLocation_town,dropOffLocation_postcode,dropOffLocation_listed,assignee_0_name,assignee_0_role,item_0_label,item_0_count,item_1_label,item_1_count,comment_0_author,comment_0_body,comment_1_author,comment_1_body
-2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,yay rider role,FALSE,MEDIUM,NEW,2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,,2021-11-29T23:24:58.987Z,some person,0121212121,pickup ward1,pickup line1,pickup town,pickup postcode,TRUE,dropoff ward,dropoff line1,dropoff town,dropoff postcode,TRUE,Whoami name,RIDER,deliverable 1,5,deliverable 2,6,Whoami,body 1,Whoami,body 2"
+"createdAt,timeOfCall,riderResponsibility,isRiderUsingOwnVehicle,priority,status,timePickedUp,timePickedUpSenderName,timeDroppedOff,timeDroppedOffRecipientName,timeRiderHome,timeRejected,timeCancelled,requesterContact_name,requesterContact_telephoneNumber,pickUpLocation_ward,pickUpLocation_line1,pickUpLocation_town,pickUpLocation_postcode,pickUpLocation_listed,dropOffLocation_ward,dropOffLocation_line1,dropOffLocation_town,dropOffLocation_postcode,dropOffLocation_listed,assignee_0_name,assignee_0_role,item_0_label,item_0_count,item_1_label,item_1_count,comment_0_author,comment_0_body,comment_1_author,comment_1_body
+2021-11-29T23:24:58.987Z,2021-11-29T23:24:58.987Z,yay rider role,FALSE,MEDIUM,NEW,2021-11-29T23:24:58.987Z,sender name,2021-11-29T23:24:58.987Z,recipient name,2021-11-29T23:24:58.987Z,,2021-11-29T23:24:58.987Z,some person,0121212121,pickup ward1,pickup line1,pickup town,pickup postcode,TRUE,dropoff ward,dropoff line1,dropoff town,dropoff postcode,TRUE,Whoami name,RIDER,deliverable 1,5,deliverable 2,6,Whoami,body 1,Whoami,body 2"
 `;

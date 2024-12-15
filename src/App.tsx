@@ -1,4 +1,5 @@
 import React from "react";
+import { APIProvider } from "@vis.gl/react-google-maps";
 import { MenuMainContainer } from "./navigation/MenuMainContainer";
 import "./index.css";
 import "./App.css";
@@ -23,6 +24,8 @@ import SnackNotificationBar from "./components/SnackNotificationBar";
 import TenantListProvider from "./scenes/TenantPicker/TenantListProvider";
 import { initialiseApp } from "./redux/initialise/initialiseActions";
 import * as Sentry from "@sentry/react";
+
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string;
 
 if (process.env.REACT_APP_DEMO_MODE === "false") {
     Sentry.init({
@@ -122,33 +125,37 @@ const App = (props: any) => {
 
     if (process.env.REACT_APP_DEMO_MODE === "true") {
         return (
-            <StyledEngineProvider injectFirst>
-                <ThemeProvider theme={theme}>
-                    <SnackbarProvider maxSnack={1}>
-                        <InitComponent>
-                            <CssBaseline />
-                            <MenuMainContainer />
-                            <SnackNotificationBar {...props} />
-                        </InitComponent>
-                    </SnackbarProvider>
-                </ThemeProvider>
-            </StyledEngineProvider>
-        );
-    } else {
-        return (
-            <StyledEngineProvider injectFirst>
-                <ThemeProvider theme={theme}>
-                    <SnackbarProvider maxSnack={1}>
-                        <TenantListProvider>
-                            <Login>
+            <APIProvider apiKey={GOOGLE_MAPS_API_KEY}>
+                <StyledEngineProvider injectFirst>
+                    <ThemeProvider theme={theme}>
+                        <SnackbarProvider maxSnack={1}>
+                            <InitComponent>
                                 <CssBaseline />
                                 <MenuMainContainer />
                                 <SnackNotificationBar {...props} />
-                            </Login>
-                        </TenantListProvider>
-                    </SnackbarProvider>
-                </ThemeProvider>
-            </StyledEngineProvider>
+                            </InitComponent>
+                        </SnackbarProvider>
+                    </ThemeProvider>
+                </StyledEngineProvider>
+            </APIProvider>
+        );
+    } else {
+        return (
+            <APIProvider apiKey={GOOGLE_MAPS_API_KEY}>
+                <StyledEngineProvider injectFirst>
+                    <ThemeProvider theme={theme}>
+                        <SnackbarProvider maxSnack={1}>
+                            <TenantListProvider>
+                                <Login>
+                                    <CssBaseline />
+                                    <MenuMainContainer />
+                                    <SnackNotificationBar {...props} />
+                                </Login>
+                            </TenantListProvider>
+                        </SnackbarProvider>
+                    </ThemeProvider>
+                </StyledEngineProvider>
+            </APIProvider>
         );
     }
 };

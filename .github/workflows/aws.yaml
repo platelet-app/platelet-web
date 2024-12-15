@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [20.x]
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
@@ -28,6 +28,7 @@ jobs:
         REACT_APP_DEMO_PROFILE_PICTURES_BUCKET_REGION: eu-west-1
         REACT_APP_OFFLINE_ONLY: true
         REACT_APP_POPULATE_FAKE_DATA: true
+        REACT_APP_GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         CI: false
         GENERATE_SOURCEMAP: false
     - name: NPM test

@@ -56,13 +56,13 @@ jobs:
         apiURL: ${{ vars.API_URL }}
         amplifyEnvName: ${{ steps.amplify_status.outputs.environment_name }}
         tenantName: ${{ vars.TENANT_NAME }}
-    - name: Register the tenant admin
-      uses: platelet-app/register-tenant-action@master
-      with:
-        awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        awsRegion: ${{ vars.AWS_REGION }}
-        tenantApiUrl: ${{ steps.amplify_status.outputs.graphql_endpoint }}
-        tenantName: ${{ vars.TENANT_NAME }}
-        adminName: ${{ vars.ADMIN_NAME }}
-        adminEmail: ${{ vars.ADMIN_EMAIL }}
+        #     - name: Register the tenant admin
+        #       uses: platelet-app/register-tenant-action@master
+        #       with:
+        #         awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        #         awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        #         awsRegion: ${{ vars.AWS_REGION }}
+        #         tenantApiUrl: ${{ steps.amplify_status.outputs.graphql_endpoint }}
+        #         tenantName: ${{ vars.TENANT_NAME }}
+        #         adminName: ${{ vars.ADMIN_NAME }}
+        #         adminEmail: ${{ vars.ADMIN_EMAIL }}

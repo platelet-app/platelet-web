@@ -150,6 +150,8 @@ describe("generateReports", () => {
             },
             deliverables: { items: [item1, item2, deletedItem] },
             comments: { items: [comment1, comment2, commentDeleted] },
+            timeDroppedOffRecipientName: "recipient name",
+            timePickedUpSenderName: "sender name",
             priority: priorities.medium,
             dateCreated: new Date().toISOString().split("T")[0],
             isRiderUsingOwnVehicle: 0,
@@ -173,6 +175,8 @@ describe("generateReports", () => {
             assignees: {
                 items: [assigneeOther],
             },
+            timeDroppedOffRecipientName: null,
+            timePickedUpSenderName: "sender name 2",
             deliverables: { items: [item3] },
             comments: { items: [commentPrivate] },
             priority: priorities.medium,
@@ -207,121 +211,7 @@ describe("generateReports", () => {
         );
         expect(graphqlSpy).toHaveBeenCalledTimes(1);
         const vars = graphqlSpy.mock.calls[0][0];
-        expect(vars).toMatchInlineSnapshot(`
-            Object {
-              "query": "
-                query ListTasksByTenantId(
-                    $filter: ModelTaskFilterInput
-                    $limit: Int
-                    $nextToken: String
-                    $tenantId: ID!
-                    $sortDirection: ModelSortDirection
-                    $startDate: String
-                    $endDate: String
-                ) {
-                    listTasksByTenantId(
-                        filter: $filter
-                        limit: $limit
-                        nextToken: $nextToken
-                        tenantId: $tenantId
-                        sortDirection: $sortDirection
-                        createdAt: { between: [$startDate, $endDate] }
-                    ) {
-                        items {
-                            id
-                            createdAt
-                            timeOfCall
-                            riderResponsibility
-                            isRiderUsingOwnVehicle
-                            priority
-                            status
-                            timePickedUp
-                            timeDroppedOff
-                            timeRiderHome
-                            timeRejected
-                            timeCancelled
-                            dateCreated
-                            requesterContact {
-                                name
-                                telephoneNumber
-                            }
-                            assignees {
-                                items {
-                                    assignee {
-                                        id
-                                        _deleted
-                                        displayName
-                                        name
-                                    }
-                                    role
-                                }
-                            }
-                            pickUpLocation {
-                                ward
-                                line1
-                                line2
-                                line3
-                                town
-                                county
-                                state
-                                country
-                                postcode
-                                what3words
-                                listed
-                            }
-                            dropOffLocation {
-                                ward
-                                line1
-                                line2
-                                line3
-                                town
-                                county
-                                state
-                                country
-                                postcode
-                                what3words
-                                listed
-                            }
-                            deliverables {
-                                items {
-                                    count
-                                    _deleted
-                                    deliverableType {
-                                        label
-                                        icon
-                                    }
-                                }
-                            }
-                            comments {
-                                items {
-                                    id
-                                    _deleted
-                                    visibility
-                                    author {
-                                        displayName
-                                        name
-                                        id
-                                    }
-                                    body
-                                }
-                            }
-                            _version
-                            _deleted
-                            _lastChangedAt
-                        }
-                        nextToken
-                        startedAt
-                    }
-                }
-            ",
-              "variables": Object {
-                "endDate": "2021-11-30T00:00:00.000Z",
-                "nextToken": null,
-                "startDate": "2021-11-26T00:00:00.000Z",
-                "tenantId": "tenantId",
-              },
-            }
-        `);
+        expect(vars).toMatchSnapshot();
         expect(resultBasic).toMatchSnapshot();
     });
     test("generate a report with ALL tasks", async () => {
@@ -435,6 +325,9 @@ describe("generateReports", () => {
             assignees: {
                 items: [coordAssignee, coordAssignee1, riderAssignee1],
             },
+
+            timeDroppedOffRecipientName: "recipient name",
+            timePickedUpSenderName: "sender name",
             deliverables: { items: [item1, item2, deletedItem] },
             comments: { items: [comment1, comment2, commentDeleted] },
             priority: priorities.medium,
@@ -465,6 +358,8 @@ describe("generateReports", () => {
             priority: priorities.medium,
             dateCreated: new Date().toISOString().split("T")[0],
             isRiderUsingOwnVehicle: 0,
+            timeDroppedOffRecipientName: "recipient name2",
+            timePickedUpSenderName: "sender name2",
             pickUpLocation: pickUpLocationData,
             dropOffLocation: dropOffLocationData,
             riderResponsibility: "yay rider role",
@@ -519,121 +414,7 @@ describe("generateReports", () => {
         );
         expect(graphqlSpy).toHaveBeenCalledTimes(1);
         const vars = graphqlSpy.mock.calls[0][0];
-        expect(vars).toMatchInlineSnapshot(`
-            Object {
-              "query": "
-                query ListTasksByTenantId(
-                    $filter: ModelTaskFilterInput
-                    $limit: Int
-                    $nextToken: String
-                    $tenantId: ID!
-                    $sortDirection: ModelSortDirection
-                    $startDate: String
-                    $endDate: String
-                ) {
-                    listTasksByTenantId(
-                        filter: $filter
-                        limit: $limit
-                        nextToken: $nextToken
-                        tenantId: $tenantId
-                        sortDirection: $sortDirection
-                        createdAt: { between: [$startDate, $endDate] }
-                    ) {
-                        items {
-                            id
-                            createdAt
-                            timeOfCall
-                            riderResponsibility
-                            isRiderUsingOwnVehicle
-                            priority
-                            status
-                            timePickedUp
-                            timeDroppedOff
-                            timeRiderHome
-                            timeRejected
-                            timeCancelled
-                            dateCreated
-                            requesterContact {
-                                name
-                                telephoneNumber
-                            }
-                            assignees {
-                                items {
-                                    assignee {
-                                        id
-                                        _deleted
-                                        displayName
-                                        name
-                                    }
-                                    role
-                                }
-                            }
-                            pickUpLocation {
-                                ward
-                                line1
-                                line2
-                                line3
-                                town
-                                county
-                                state
-                                country
-                                postcode
-                                what3words
-                                listed
-                            }
-                            dropOffLocation {
-                                ward
-                                line1
-                                line2
-                                line3
-                                town
-                                county
-                                state
-                                country
-                                postcode
-                                what3words
-                                listed
-                            }
-                            deliverables {
-                                items {
-                                    count
-                                    _deleted
-                                    deliverableType {
-                                        label
-                                        icon
-                                    }
-                                }
-                            }
-                            comments {
-                                items {
-                                    id
-                                    _deleted
-                                    visibility
-                                    author {
-                                        displayName
-                                        name
-                                        id
-                                    }
-                                    body
-                                }
-                            }
-                            _version
-                            _deleted
-                            _lastChangedAt
-                        }
-                        nextToken
-                        startedAt
-                    }
-                }
-            ",
-              "variables": Object {
-                "endDate": "2021-11-30T00:00:00.000Z",
-                "nextToken": null,
-                "startDate": "2021-11-26T00:00:00.000Z",
-                "tenantId": "tenantId",
-              },
-            }
-        `);
+        expect(vars).toMatchSnapshot();
         expect(resultBasic).toMatchSnapshot();
     });
 

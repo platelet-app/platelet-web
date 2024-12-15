@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Typography from "@mui/material/Typography";
-import { Box, Chip, Paper, Stack } from "@mui/material";
+import { Chip, Paper, Stack } from "@mui/material";
 import { taskStatusHumanReadable } from "../../../utilities";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";

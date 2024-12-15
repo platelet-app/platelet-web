@@ -21,7 +21,7 @@ function LabelItemPair(props) {
 
 LabelItemPair.propTypes = {
     label: PropTypes.string,
-    children: PropTypes.node,
+    children: PropTypes.any,
 };
 
 LabelItemPair.defaultProps = {

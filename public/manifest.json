@@ -1,6 +1,6 @@
 {
-    "short_name": "Platelet",
-    "name": "Platelet",
+    "short_name": "Dispatch",
+    "name": "Platelet Dispatch",
     "icons": [
         {
             "src": "icon/hires.png",
@@ -10,6 +10,6 @@
     ],
     "start_url": ".",
     "display": "standalone",
-    "theme_color": "#fd6d2a",
+    "theme_color": "#CF551A",
     "background_color": "#282828"
 }

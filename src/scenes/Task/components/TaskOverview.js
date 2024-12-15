@@ -15,6 +15,7 @@ import TaskAssignmentsPanel from "./TaskAssignmentsPanel";
 import CommentsSection from "../../Comments/CommentsSection";
 import PendingTaskAcceptReject from "./PendingTaskAcceptReject";
 import StatusBar from "./StatusBar";
+import TaskMapDirections from "./TaskMapDirections";
 
 const useStyles = makeStyles()((theme) => ({
     root: {
@@ -62,6 +63,13 @@ function TaskOverview({ taskId, isFetching }) {
                             taskId={taskId}
                         />
                         <TaskActions taskId={taskId} />
+                        <DeliverableDetails
+                            taskModelType="Task"
+                            taskId={taskId}
+                        />
+                        <Hidden mdUp>
+                            <TaskAssignmentsPanel taskId={taskId} />
+                        </Hidden>
                     </Stack>
                 </Grid>
                 <Grid item className={classes.item}>
@@ -76,13 +84,7 @@ function TaskOverview({ taskId, isFetching }) {
                             taskId={taskId}
                             locationKey={"dropOffLocation"}
                         />
-                        <DeliverableDetails
-                            taskModelType="Task"
-                            taskId={taskId}
-                        />
-                        <Hidden mdUp>
-                            <TaskAssignmentsPanel taskId={taskId} />
-                        </Hidden>
+                        <TaskMapDirections taskId={taskId} />
                     </Stack>
                 </Grid>
                 <Hidden mdUp>

@@ -1,6 +1,6 @@
 import _ from "lodash";
 import * as models from "../../../models";
-import { writeToString } from "@fast-csv/format";
+import Papa from "papaparse";
 import getTasksByTenantId from "./getTasksByTenantId";
 import { Task, Role, CommentVisibility, TaskAssignee } from "../../../API";
 
@@ -21,7 +21,9 @@ const taskFields = {
     priority: "",
     status: "",
     timePickedUp: "",
+    timePickedUpSenderName: "",
     timeDroppedOff: "",
+    timeDroppedOffRecipientName: "",
     timeRiderHome: "",
     timeRejected: "",
     timeCancelled: "",
@@ -268,7 +270,7 @@ async function generateCSV(data: (Task | null)[]) {
 
         rows.push(row);
     });
-    return await writeToString(rows);
+    return Papa.unparse(rows);
 }
 
 export default async function generateReportBasic(
