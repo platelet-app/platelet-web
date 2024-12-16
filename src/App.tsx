@@ -96,6 +96,7 @@ const InitComponent = ({ children }: { children: React.ReactNode }) => {
     }, [dispatch]);
     return <>{children}</>;
 };
+// asf
 
 const App = (props: any) => {
     let theme;
